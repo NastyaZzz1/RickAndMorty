@@ -36,6 +36,10 @@ class CharacterListFragment : Fragment() {
         observerNavigate()
     }
 
+    fun setupSearchView() {
+
+    }
+
     private fun setupList() {
         adapter = CharacterItemAdapter { characterId ->
             viewModel.onCharacterClicked(characterId)
