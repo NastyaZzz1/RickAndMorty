@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.RickAndMorty" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:navigationBarColor">@color/grey</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/grey</item>
+    </style>
+
+    <style name="Theme.RickAndMorty" parent="Base.Theme.RickAndMorty" />
+</resources>
