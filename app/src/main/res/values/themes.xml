@@ -5,4 +5,9 @@
     </style>
 
     <style name="Theme.RickAndMorty" parent="Base.Theme.RickAndMorty" />
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColorHint">@color/light_grey</item>
+        <item name="android:textColor">@color/light_grey</item>
+    </style>
 </resources>

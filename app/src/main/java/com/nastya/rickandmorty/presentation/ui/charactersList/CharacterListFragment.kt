@@ -1,6 +1,8 @@
 package com.nastya.rickandmorty.presentation.ui.charactersList
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +11,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nastya.rickandmorty.databinding.FragmentCharacterListBinding
+import com.nastya.rickandmorty.presentation.ui.main.MainActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class CharacterListFragment : Fragment() {
+class CharacterListFragment : Fragment(), MainActivity.SearchListener {
     private var _binding: FragmentCharacterListBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: CharacterListViewModel
     private lateinit var adapter: CharacterItemAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity() as MainActivity).setSearchListener(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +42,6 @@ class CharacterListFragment : Fragment() {
         setupList()
         observerUiState()
         observerNavigate()
-    }
-
-    fun setupSearchView() {
-
     }
 
     private fun setupList() {
@@ -62,7 +66,7 @@ class CharacterListFragment : Fragment() {
     fun observerNavigate() {
         lifecycleScope.launch {
             viewModel.navigateToDetail.collect { characterId ->
-                characterId?.let {
+                characterId.let {
                     val action = CharacterListFragmentDirections.
                     actionCharacterListFragmentToDetailFragment(characterId)
                     findNavController().navigate(action)
@@ -98,5 +102,13 @@ class CharacterListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onSearch(query: String) {
+        viewModel.searchCharacters(query)
+    }
+
+    override fun onSearchQueryChanged(query: String) {
+        viewModel.searchCharactersDebounced(query)
     }
 }
