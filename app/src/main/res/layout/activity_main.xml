@@ -20,6 +20,15 @@
         app:titleTextColor="@color/white"
         app:layout_constraintTop_toTopOf="parent" >
 
+        <SearchView
+            android:id="@+id/idSV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/searchview_background"
+            android:queryBackground="@android:color/transparent"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search character" />
     </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.fragment.app.FragmentContainerView

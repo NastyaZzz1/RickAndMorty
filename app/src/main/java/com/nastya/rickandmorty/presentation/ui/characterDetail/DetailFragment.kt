@@ -1,7 +1,6 @@
 package com.nastya.rickandmorty.presentation.ui.characterDetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: DetailViewModel
-//    private lateinit var adapter: EpisodeItemAdapter
+    private lateinit var adapter: EpisodeItemAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,12 +30,12 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        adapter = EpisodeItemAdapter()
-//        binding.episodeList.adapter = adapter
+        adapter = EpisodeItemAdapter()
+        binding.episodeList.adapter = adapter
 
         observerCharacter()
         observerLocation()
-//        observerEpisode()
+        observerEpisode()
     }
 
     fun observerCharacter() {
@@ -44,12 +43,12 @@ class DetailFragment : Fragment() {
             viewModel.character.collect { characterItem ->
                 characterItem?.let {
                     viewModel.requestLocation(characterItem.location.url.substringAfterLast('/').toInt())
-//                    viewModel.requestEpisode(characterItem.episode)
+                    viewModel.requestEpisode(characterItem.episode)
 
                     binding.charName.text = characterItem.name
-                    binding.charGender.text = "Gender: ${characterItem.gender}"
-                    binding.charSpecies.text = "Species: ${characterItem.species}"
-                    binding.charStatus.text = "Status: ${characterItem.status}"
+                    binding.charGender.text = characterItem.gender
+                    binding.charSpecies.text = characterItem.species
+                    binding.charStatus.text = characterItem.status
                     binding.charImage.load(characterItem.image) {
                         crossfade(false)
                     }
@@ -62,19 +61,19 @@ class DetailFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.location.collect { locationItem ->
                 locationItem?.let {
-                    binding.charLocationName.text = "Name: ${locationItem.name}"
-                    binding.charLocationType.text = "Type: ${locationItem.type}"
-                    binding.charLocationDimension.text = "Dimension: ${locationItem.dimension}"
+                    binding.charLocationName.text = locationItem.name
+                    binding.charLocationType.text = locationItem.type
+                    binding.charLocationDimension.text = locationItem.dimension
                 }
             }
         }
     }
 
-//    fun observerEpisode() {
-//        lifecycleScope.launch {
-//            viewModel.episodes.collect { episodesList ->
-//                adapter.submitList(episodesList)
-//            }
-//        }
-//    }
+    fun observerEpisode() {
+        lifecycleScope.launch {
+            viewModel.episodes.collect { episodesList ->
+                adapter.submitList(episodesList)
+            }
+        }
+    }
 }

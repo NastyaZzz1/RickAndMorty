@@ -67,20 +67,20 @@ class DetailViewModel(savedStateHandle: SavedStateHandle): ViewModel() {
         }
     }
 
-//    fun requestEpisode(episodeUrls: List<String>) {
-//        viewModelScope.launch {
-//            try {
-//                val episodesId = episodeUrls.joinToString(",") { it.substringAfterLast('/') }
-//                val response = remoteRepositoryImpl.getEpisodeMultiple(episodesId)
-//                if(response.isSuccessful) {
-//                    _episodes.emit(response.body())
-//                }
-//                else {
-//                    Log.d("DetailViewModel", "API error: ${response.code()}")
-//                }
-//            } catch (e: Exception) {
-//                Log.d("DetailViewModel", "Error: ${e.message}")
-//            }
-//        }
-//    }
+    fun requestEpisode(episodeUrls: List<String>) {
+        viewModelScope.launch {
+            try {
+                val episodesId = episodeUrls.joinToString(",") { it.substringAfterLast('/') }
+                val response = remoteRepositoryImpl.getEpisodeMultiple(episodesId)
+                if(response.isSuccessful) {
+                    _episodes.emit(response.body())
+                }
+                else {
+                    Log.d("DetailViewModel", "API error: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.d("DetailViewModel", "Error: ${e.message}")
+            }
+        }
+    }
 }
