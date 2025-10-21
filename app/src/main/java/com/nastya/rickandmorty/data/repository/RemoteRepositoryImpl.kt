@@ -8,7 +8,6 @@ import com.nastya.rickandmorty.data.paging.EpisodePagingSource
 import com.nastya.rickandmorty.data.paging.LocationPagingSource
 import com.nastya.rickandmorty.data.remote.api.ApiService
 import com.nastya.rickandmorty.domain.model.characters.CharactersResDTO
-import com.nastya.rickandmorty.domain.model.characters.EpisodeDTO
 import com.nastya.rickandmorty.domain.model.characters.EpisodeResDTO
 import com.nastya.rickandmorty.domain.model.characters.LocationsResDTO
 import kotlinx.coroutines.flow.Flow
@@ -19,11 +18,14 @@ class RemoteRepositoryImpl {
         ApiService.getApiService()
     }
 
-    fun getCharactersStream(name: String)
+    fun getCharactersStream(
+        name: String,
+        onError: (Throwable) -> Unit
+    )
         : Flow<PagingData<CharactersResDTO>> {
         return Pager(
             config = PagingConfig(pageSize = 10),
-            pagingSourceFactory = { CharacterPagingSource(apiService, name) }
+            pagingSourceFactory = { CharacterPagingSource(apiService, name, onError) }
         ).flow
     }
 

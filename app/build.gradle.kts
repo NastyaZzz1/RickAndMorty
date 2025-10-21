@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.swiperefreshlayout)
     implementation(libs.io.coil.kt)
     implementation(libs.androidx.cardview)
     implementation(libs.moshi.kotlin)

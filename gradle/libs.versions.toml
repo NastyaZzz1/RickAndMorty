@@ -17,8 +17,10 @@ moshiVersion = "1.15.2"
 lifecycleKtx = "2.8.7"
 cardviewVersion = "1.0.0"
 coilVersion = "2.7.0"
+swiperefreshlayout = "1.1.0"
 
 [libraries]
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 io-coil-kt = { module = "io.coil-kt:coil", version.ref = "coilVersion"}
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardviewVersion"}
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleKtx"}

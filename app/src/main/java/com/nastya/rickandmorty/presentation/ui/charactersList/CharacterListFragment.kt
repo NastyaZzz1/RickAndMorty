@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.nastya.rickandmorty.databinding.FragmentCharacterListBinding
 import com.nastya.rickandmorty.presentation.ui.main.MainActivity
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +45,35 @@ class CharacterListFragment : Fragment(), MainActivity.SearchListener {
         setupList()
         observerUiState()
         observerNavigate()
+        setupRefresh()
+        observeLoadState()
+        observeRefreshingState()
+    }
+
+    fun setupRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            adapter.refresh()
+        }
+    }
+
+    private fun observeRefreshingState() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isRefreshing.collect { isRefreshing ->
+                    binding.swipeRefreshLayout.isRefreshing = isRefreshing
+                }
+            }
+        }
+    }
+
+    private fun observeLoadState() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collect { loadState ->
+                    viewModel.handleLoadState(loadState, adapter.itemCount)
+                }
+            }
+        }
     }
 
     private fun setupList() {
@@ -54,6 +86,7 @@ class CharacterListFragment : Fragment(), MainActivity.SearchListener {
     fun observerUiState() {
         lifecycleScope.launch {
             viewModel.uiState.collect { state ->
+                Log.d("ggg", state.toString())
                 when(state) {
                     is CharacterListViewModel.UiState.Loading -> showLoading()
                     is CharacterListViewModel.UiState.Success -> showData()
@@ -78,13 +111,13 @@ class CharacterListFragment : Fragment(), MainActivity.SearchListener {
     fun showLoading() {
         binding.progressIndicator.visibility = View.VISIBLE
         binding.characterList.visibility = View.GONE
-//        binding.layoutError.visibility = View.GONE
+        binding.layoutError.visibility = View.GONE
     }
 
     fun showData() {
         binding.progressIndicator.visibility = View.GONE
         binding.characterList.visibility = View.VISIBLE
-//        binding.layoutError.visibility = View.GONE
+        binding.layoutError.visibility = View.GONE
 
         lifecycleScope.launch {
             viewModel.listData.collectLatest {
@@ -96,7 +129,7 @@ class CharacterListFragment : Fragment(), MainActivity.SearchListener {
     fun showError() {
         binding.progressIndicator.visibility = View.GONE
         binding.characterList.visibility = View.GONE
-//        binding.layoutError.visibility = View.VISIBLE
+        binding.layoutError.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
