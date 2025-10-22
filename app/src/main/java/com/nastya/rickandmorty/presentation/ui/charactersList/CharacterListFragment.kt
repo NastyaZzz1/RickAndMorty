@@ -2,17 +2,20 @@ package com.nastya.rickandmorty.presentation.ui.charactersList
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import com.nastya.rickandmorty.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.nastya.rickandmorty.databinding.FragmentCharacterListBinding
 import com.nastya.rickandmorty.presentation.ui.main.MainActivity
 import kotlinx.coroutines.flow.collectLatest
@@ -23,6 +26,10 @@ class CharacterListFragment : Fragment(), MainActivity.SearchListener {
     private val binding get() = _binding!!
     private lateinit var viewModel: CharacterListViewModel
     private lateinit var adapter: CharacterItemAdapter
+    private lateinit var dismissButton: Button
+    private lateinit var chipsGroupStatus: ChipGroup
+    private lateinit var chipsGroupGender: ChipGroup
+    private lateinit var chipsGroupSpecies: ChipGroup
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,6 +55,31 @@ class CharacterListFragment : Fragment(), MainActivity.SearchListener {
         setupRefresh()
         observeLoadState()
         observeRefreshingState()
+        setupFabFilter()
+    }
+
+    fun setupFabFilter() {
+        binding.fabFilter.setOnClickListener {
+            val viewDialog = layoutInflater.inflate(R.layout.bottom_sheet_dialog, null)
+            dismissButton = viewDialog.findViewById(R.id.dismissButton)
+            chipsGroupStatus = viewDialog.findViewById(R.id.chip_group_status)
+            chipsGroupGender = viewDialog.findViewById(R.id.chip_group_gender)
+            chipsGroupSpecies = viewDialog.findViewById(R.id.chip_group_species)
+            viewModel.setupInitialChipSelection(chipsGroupStatus, chipsGroupGender, chipsGroupSpecies)
+            val dialog = BottomSheetDialog(requireContext())
+
+            dismissButton.setOnClickListener {
+                viewModel.setupFilterChips(
+                    chipsGroupStatus,
+                    chipsGroupGender,
+                    chipsGroupSpecies
+                )
+                dialog.dismiss()
+            }
+            dialog.setCancelable(false)
+            dialog.setContentView(viewDialog)
+            dialog.show()
+        }
     }
 
     fun setupRefresh() {
@@ -86,7 +118,6 @@ class CharacterListFragment : Fragment(), MainActivity.SearchListener {
     fun observerUiState() {
         lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                Log.d("ggg", state.toString())
                 when(state) {
                     is CharacterListViewModel.UiState.Loading -> showLoading()
                     is CharacterListViewModel.UiState.Success -> showData()

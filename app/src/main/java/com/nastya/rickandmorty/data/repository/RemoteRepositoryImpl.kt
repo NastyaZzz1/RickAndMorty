@@ -20,12 +20,15 @@ class RemoteRepositoryImpl {
 
     fun getCharactersStream(
         name: String,
+        gender: String,
+        status: String,
+        species: String,
         onError: (Throwable) -> Unit
     )
         : Flow<PagingData<CharactersResDTO>> {
         return Pager(
             config = PagingConfig(pageSize = 10),
-            pagingSourceFactory = { CharacterPagingSource(apiService, name, onError) }
+            pagingSourceFactory = { CharacterPagingSource(apiService, name, gender, status, species, onError) }
         ).flow
     }
 

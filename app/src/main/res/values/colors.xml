@@ -5,7 +5,9 @@
     <color name="grey">#424242</color>
     <color name="light_grey">#616161</color>
     <color name="light_grey_for_text">#ABABAB</color>
+    <color name="light_green">#E1E4E1</color>
     <color name="green">#8BC34A</color>
+    <color name="dark_green">#5E9036</color>
     <color name="blue">#4A91C3</color>
     <color name="pink">#C34AAF</color>
 </resources>

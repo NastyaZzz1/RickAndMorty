@@ -1,6 +1,5 @@
 package com.nastya.rickandmorty.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.nastya.rickandmorty.data.remote.api.ApiService
@@ -8,7 +7,10 @@ import com.nastya.rickandmorty.domain.model.characters.CharactersResDTO
 
 class CharacterPagingSource(
     val backend: ApiService,
-    val query: String,
+    val name: String,
+    val status: String,
+    val gender: String,
+    val species: String,
     private val onError: (Throwable) -> Unit
 ) : PagingSource<Int, CharactersResDTO>() {
     override suspend fun load(
@@ -16,11 +18,10 @@ class CharacterPagingSource(
     ): LoadResult<Int, CharactersResDTO> {
         return try {
             val nextPageNumber = params.key ?: 1
-            val response = backend.getListDataCharacter(nextPageNumber, query)
+            val response = backend.getListDataCharacter(nextPageNumber, name, gender, status, species)
             val responseData = mutableListOf<CharactersResDTO>()
             val data = response.body()?.results ?: emptyList()
             responseData.addAll(data)
-
             LoadResult.Page(
                 data = responseData,
                 prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,

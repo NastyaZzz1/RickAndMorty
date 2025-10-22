@@ -2,4 +2,25 @@
     <string name="app_name">RickAndMorty</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_error">Не удалось загрузить данные :(</string>
+    <string name="show">Показать</string>
+    <string name="filters">Фильтры</string>
+    <string name="status">Status</string>
+    <string name="alive">Alive</string>
+    <string name="dead">Dead</string>
+    <string name="unknown">Unknown</string>
+    <string name="gender">Gender</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="genderless">Genderless</string>
+    <string name="species">Species</string>
+
+    <string name="human">Human</string>
+    <string name="alien">Alien</string>
+    <string name="humanoid">Humanoid</string>
+    <string name="robot">Robot</string>
+    <string name="animal">Animal</string>
+    <string name="mythological_creature">Mythological Creature</string>
+    <string name="disease">Disease</string>
+    <string name="poopybutthole">Poopybutthole</string>
+    <string name="cronenberg">Cronenberg</string>
 </resources>
