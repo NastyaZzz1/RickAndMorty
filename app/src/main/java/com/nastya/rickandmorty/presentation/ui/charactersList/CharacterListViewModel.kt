@@ -9,8 +9,8 @@ import androidx.paging.cachedIn
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.nastya.rickandmorty.R
-import com.nastya.rickandmorty.data.repository.RemoteRepositoryImpl
-import com.nastya.rickandmorty.domain.model.characters.CharactersResDTO
+import com.nastya.rickandmorty.data.local.entity.CharacterEntity
+import com.nastya.rickandmorty.data.repository.CharacterRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,10 +23,12 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class CharacterListViewModel: ViewModel() {
+class CharacterListViewModel(
+    private val repository: CharacterRepository
+): ViewModel() {
     sealed class UiState() {
         object Loading : UiState()
-        data class Success(val data: PagingData<CharactersResDTO>) : UiState()
+        data class Success(val data: PagingData<CharacterEntity>) : UiState()
         data class Error(val message: String) : UiState()
     }
     data class CharacterFilters(
@@ -48,7 +50,7 @@ class CharacterListViewModel: ViewModel() {
     private val queryFilterGender = MutableStateFlow("")
     private val queryFilterSpecies = MutableStateFlow("")
 
-    val listData: Flow<PagingData<CharactersResDTO>> =
+    val listData: Flow<PagingData<CharacterEntity>> =
         combine(
             searchQuery,
         queryFilterStatus,
@@ -58,20 +60,18 @@ class CharacterListViewModel: ViewModel() {
         { name, status, gender, species ->
             CharacterFilters(name, status, gender, species)
         }.flatMapLatest { filters ->
-            remoteRepositoryImpl.getCharactersStream(
+            repository.refreshData()
+
+            repository.getCharactersStream(
                 filters.name,
-                filters.status,
                 filters.gender,
+                filters.status,
                 filters.species
-            ) { error ->
-                _uiState.value = UiState.Error(error.message ?: "Unknown error")
-            }.cachedIn(viewModelScope)
+            ).cachedIn(viewModelScope)
         }
 
     private val _navigateToDetail = Channel<Int>()
     val navigateToDetail = _navigateToDetail.receiveAsFlow()
-
-    private val remoteRepositoryImpl = RemoteRepositoryImpl()
 
     init {
         observeListData()
@@ -194,7 +194,7 @@ class CharacterListViewModel: ViewModel() {
             "human" -> chipsGroupSpecies.findViewById<Chip>(R.id.chip_human).isChecked = true
             "humanoid" -> chipsGroupSpecies.findViewById<Chip>(R.id.chip_humanoid).isChecked = true
             "robot" -> chipsGroupSpecies.findViewById<Chip>(R.id.chip_robot).isChecked = true
-            "mythological_creature" -> chipsGroupSpecies.findViewById<Chip>(R.id.chip_mythological_creature).isChecked = true
+            "mythological Creature" -> chipsGroupSpecies.findViewById<Chip>(R.id.chip_mythological_creature).isChecked = true
             "unknown" -> chipsGroupSpecies.findViewById<Chip>(R.id.chip_unknown).isChecked = true
             "poopybutthole" -> chipsGroupSpecies.findViewById<Chip>(R.id.chip_poopybutthole).isChecked = true
         }

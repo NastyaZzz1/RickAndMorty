@@ -35,7 +35,7 @@ interface ApiService {
     @GET("location")
     suspend fun getListDataLocation(
         @Query("page") pageNumber: Int = 1,
-        @Query("name") name : String = "",
+        @Query("name") name: String = "",
     ): Response<LocationsDTO>
 
     @GET("location/{id}")
@@ -47,7 +47,7 @@ interface ApiService {
     @GET("episode")
     suspend fun getListDataEpisode(
         @Query("page") pageNumber: Int = 1,
-        @Query("name") name : String = "",
+        @Query("name") name: String = "",
     ): Response<EpisodeDTO>
 
     @GET("episode/[{urlsId}]")

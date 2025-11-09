@@ -9,7 +9,7 @@ appcompat = "1.7.1"
 material = "1.13.0"
 activity = "1.11.0"
 constraintlayout = "2.2.1"
-pagingVersion = "3.3.6"
+pagingVersion = "3.2.1"
 navigationFragmentKtx = "2.9.5"
 navigationUiKtx = "2.9.5"
 retrofit = "3.0.0"
@@ -18,8 +18,12 @@ lifecycleKtx = "2.8.7"
 cardviewVersion = "1.0.0"
 coilVersion = "2.7.0"
 swiperefreshlayout = "1.1.0"
+rootVersion = "2.8.3"
+ksp = "2.0.21-1.0.27"
+windowVersion = "1.2.0"
 
 [libraries]
+androidx-window = { module = "androidx.window:window", version.ref = "windowVersion" }
 swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 io-coil-kt = { module = "io.coil-kt:coil", version.ref = "coilVersion"}
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardviewVersion"}
@@ -39,9 +43,14 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "rootVersion"}
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "rootVersion" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "rootVersion" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "rootVersion"}
 
 [plugins]
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationFragmentKtx" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

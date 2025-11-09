@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.nastya.rickandmorty.data.local.entity.CharacterEntity
 import com.nastya.rickandmorty.databinding.CharacterItemBinding
-import com.nastya.rickandmorty.domain.model.characters.CharactersResDTO
+import android.util.Log
 
 class CharacterItemAdapter(val clickListener: (characterId: Int) -> Unit):
-    PagingDataAdapter<CharactersResDTO, CharacterItemAdapter.CharacterItemViewHolder>(
+    PagingDataAdapter<CharacterEntity, CharacterItemAdapter.CharacterItemViewHolder>(
     CharacterDiffItemCallback()
     ) {
     override fun onCreateViewHolder(
@@ -40,7 +41,7 @@ class CharacterItemAdapter(val clickListener: (characterId: Int) -> Unit):
             }
         }
         fun bind(
-            item: CharactersResDTO,
+            item: CharacterEntity,
             clickListener: (characterId: Int) -> Unit
         ) {
             binding.name.text = item.name
